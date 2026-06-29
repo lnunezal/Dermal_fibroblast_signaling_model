@@ -1,0 +1,173 @@
+,value
+n_phen_with_brakes_baseline,3
+n_phen_with_brakes_high,2
+n_phen_with_brakes_max,2
+n_above_aSMA_baseline,0
+n_boost_aSMA_baseline,0
+n_brake_aSMA_baseline,0
+n_above_proMMP1_baseline,4
+n_boost_proMMP1_baseline,4
+n_brake_proMMP1_baseline,0
+n_above_proMMP2_baseline,3
+n_boost_proMMP2_baseline,3
+n_brake_proMMP2_baseline,0
+n_above_proMMP9_baseline,3
+n_boost_proMMP9_baseline,3
+n_brake_proMMP9_baseline,0
+n_above_MMP1_baseline,1
+n_boost_MMP1_baseline,1
+n_brake_MMP1_baseline,0
+n_above_MMP2_baseline,7
+n_boost_MMP2_baseline,7
+n_brake_MMP2_baseline,0
+n_above_MMP9_baseline,4
+n_boost_MMP9_baseline,4
+n_brake_MMP9_baseline,0
+n_above_CImRNA_baseline,1
+n_boost_CImRNA_baseline,0
+n_brake_CImRNA_baseline,1
+n_above_CI_baseline,1
+n_boost_CI_baseline,0
+n_brake_CI_baseline,1
+n_above_fibronectin_baseline,2
+n_boost_fibronectin_baseline,2
+n_brake_fibronectin_baseline,0
+n_above_proliferation_baseline,11
+n_boost_proliferation_baseline,10
+n_brake_proliferation_baseline,1
+n_above_aSMA_high,6
+n_boost_aSMA_high,6
+n_brake_aSMA_high,0
+n_above_proMMP1_high,9
+n_boost_proMMP1_high,8
+n_brake_proMMP1_high,1
+n_above_proMMP2_high,7
+n_boost_proMMP2_high,7
+n_brake_proMMP2_high,0
+n_above_proMMP9_high,8
+n_boost_proMMP9_high,8
+n_brake_proMMP9_high,0
+n_above_MMP1_high,4
+n_boost_MMP1_high,4
+n_brake_MMP1_high,0
+n_above_MMP2_high,4
+n_boost_MMP2_high,4
+n_brake_MMP2_high,0
+n_above_MMP9_high,1
+n_boost_MMP9_high,1
+n_brake_MMP9_high,0
+n_above_CImRNA_high,4
+n_boost_CImRNA_high,4
+n_brake_CImRNA_high,0
+n_above_CI_high,11
+n_boost_CI_high,3
+n_brake_CI_high,8
+n_above_fibronectin_high,1
+n_boost_fibronectin_high,1
+n_brake_fibronectin_high,0
+n_above_proliferation_high,1
+n_boost_proliferation_high,1
+n_brake_proliferation_high,0
+n_above_aSMA_max,6
+n_boost_aSMA_max,6
+n_brake_aSMA_max,0
+n_above_proMMP1_max,9
+n_boost_proMMP1_max,8
+n_brake_proMMP1_max,1
+n_above_proMMP2_max,7
+n_boost_proMMP2_max,7
+n_brake_proMMP2_max,0
+n_above_proMMP9_max,8
+n_boost_proMMP9_max,8
+n_brake_proMMP9_max,0
+n_above_MMP1_max,4
+n_boost_MMP1_max,4
+n_brake_MMP1_max,0
+n_above_MMP2_max,4
+n_boost_MMP2_max,4
+n_brake_MMP2_max,0
+n_above_MMP9_max,1
+n_boost_MMP9_max,1
+n_brake_MMP9_max,0
+n_above_CImRNA_max,4
+n_boost_CImRNA_max,4
+n_brake_CImRNA_max,0
+n_above_CI_max,11
+n_boost_CI_max,3
+n_brake_CI_max,8
+n_above_fibronectin_max,1
+n_boost_fibronectin_max,1
+n_brake_fibronectin_max,0
+n_above_proliferation_max,1
+n_boost_proliferation_max,1
+n_brake_proliferation_max,0
+aSMA_max_abs_baseline,0.042247085955869006
+aSMA_max_abs_high,1.0111674849661352
+aSMA_max_abs_max,1.0109452376723134
+distrib_boost_range_baseline,-0.39 to -0.06
+distrib_boost_range_high,-0.65 to -0.00
+IL6_axis_proMMP29_baseline,-0.60 to -0.44
+IL6_axis_proMMP29_high,-0.00 to +0.00
+IL6_axis_proMMP1_baseline,-0.16 to -0.16
+LATS_CI_baseline,0.7160606630550704
+LATS_CImRNA_baseline,0.9271163207291612
+LATS_proliferation_baseline,0.40404572853675436
+LATS_CI_high,8.566060106030005e-05
+LATS_CImRNA_high,2.403632848313464e-13
+LATS_proliferation_high,6.840521587470061e-05
+aSMA_mechano_high,-0.82 to -0.60
+aSMA_tgfb_brake_high,+0.07 to +0.07
+proMMP1_amp_baseline,-0.31 to -0.16
+proMMP1_amp_high,-0.65 to -0.50
+proMMP1_smad7_baseline,-0.00565001799438003
+proMMP1_smad7_high,-0.16140079724697537
+proMMP1_smad3_baseline,0.0137867691315669
+proMMP1_smad3_high,0.42742895059325836
+MMP1_p38_baseline,-0.547222766519291
+MMP1_p38_high,0.07114512345000112
+MMP1_TGFb_high,-0.36 to -0.00
+MMP2_baseline_boost,-0.44 to -0.20
+MMP2_high_boost_old,-0.01 to -0.00
+MMP2_high_boost_new,-0.19 to -0.17
+MMP2_TIMP1_baseline,0.023708186156564115
+MMP2_TIMP1_high,0.09468502093751441
+MMP9_il6_baseline,-0.53 to -0.53
+MMP9_NFKB_baseline,-0.09271329742199774
+MMP9_NFKB_high,-0.24439825177269464
+MMP9_TIMPs_baseline,+0.02 to +0.02
+MMP9_TIMPs_high,+0.15 to +0.15
+CImRNA_LATS_baseline,0.9271163207291612
+CImRNA_LATS_high,2.403632848313464e-13
+CImRNA_mechano_high,-0.71 to -0.53
+CImRNA_YAP_TEAD_high,+0.06 to +0.06
+CI_MMPs_high,+0.62 to +0.63
+CI_upstream_high,+0.22 to +0.38
+CI_weak_boost_high,-0.39 to -0.11
+CI_LATS_baseline,0.7160606630550704
+CI_LATS_high,8.566060106030005e-05
+CI_YAP_TEAD_high,+0.00 to +0.00
+fibro_n_boost_baseline,2
+fibro_n_boost_high,1
+fibro_mech_high,-0.22275688482444234
+fibro_NFKB_high,-0.5769949468778351
+prol_n_boost_baseline,10
+prol_n_boost_high,1
+prol_mech_high,-0.614023529517647
+B1int_top10_baseline,0
+B1int_top10_high,9
+B1int_aSMA_high,-0.8164844468414307
+B1int_proMMP1_high,0.19253652526379117
+mech_top10_baseline,1
+mech_top10_high,10
+mech_top10_max,10
+max_minus_high_mean_aSMA,-0.00017875447056125632
+max_minus_high_mean_proMMP1,0.000796441995166366
+max_minus_high_mean_proMMP2,0.0004044181645995094
+max_minus_high_mean_proMMP9,0.000405247257399484
+max_minus_high_mean_MMP1,0.0005882057818416851
+max_minus_high_mean_MMP2,0.0002318208039216072
+max_minus_high_mean_MMP9,0.0001303677021481393
+max_minus_high_mean_CImRNA,-2.0937213525514633e-06
+max_minus_high_mean_CI,0.0003382668195275186
+max_minus_high_mean_fibronectin,-6.479404384791788e-05
+max_minus_high_mean_proliferation,2.2662817089916972e-06
