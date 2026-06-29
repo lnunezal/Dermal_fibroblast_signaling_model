@@ -1,6 +1,6 @@
 # Dermal Fibroblast Signaling Model
 
-Code and data for the manuscript *"Coupling fibroblast mechanotransduction signaling to tissue growth in a multiscale model of skin expansion"* (Nuñez-Alvarez et al.).
+Code and data for the manuscript *"Coupling fibroblast mechanotransduction signaling to tissue growth in a multiscale model of skin expansion"* (Nunez-Alvarez et al.).
 
 ## Structure
 
