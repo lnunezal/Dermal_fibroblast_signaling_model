@@ -178,6 +178,7 @@ def build_observed_dataset(path_iso, path_g1, path_g2):
     t_g2,  theta_g2,  thetag_g2,  thetap_g2  = load_growth_csv(path_g2)
 
     # if len(t_iso) != len(t_g1) or len(t_iso) != len(t_g2):
+        # print("INFO: datasets have different sizes (iso, G1, G2 treated independently).")
 
     # Observed growth (outputs)
     G1g_obs = thetag_g1
@@ -266,6 +267,7 @@ def filter_growth_below_one(data, tol=1e-6):
     data2["G2e_all"] = np.asarray(data2["G2e_all"])[m2]
 
     # Sort G2 data points by increasing G2p_all order
+    # sort_idx_g2 = np.argsort(data2["G2_in_all"])
     # data2["time_g2"] = data2["time_g2"][sort_idx_g2]
     # data2["G2g_all"] = data2["G2g_all"][sort_idx_g2]
     # data2["G2_in_all"] = data2["G2_in_all"][sort_idx_g2]
@@ -291,12 +293,17 @@ data = filter_growth_below_one(data1, tol=1e-6)
 
 def mech_to_signal1(lam, c, d):
     z = c * lam + d
+    # return 1.0 / (1.0 + np.exp(-z))
     return z
 
+# def mech_to_signal2(lam, g, h):
+#     z = g * (lam - 1.0) + h
+#     return 1.0 / (1.0 + np.exp(-z))
 
 
 def CI_to_phi_a(CI_dot, a, b):
     z = a * CI_dot + b
+    # return max(z, 0)
     return z
 
 # %%
@@ -322,81 +329,139 @@ def update_Fg(
     # 1. Current growth tensor and elastic deformation
     # ------------------------------------------------------------------
     #F*Fp=Fe*Fg
+    # F = theta * np.eye(2)  # effective total deformation (includes prestretch if any)
+    # Fg = thetag*np.eye(2)  # isotropic growth for now; can be made anisotropic if needed
+    # Fp= thetap*np.eye(2) # prestretch (if any)
 
+    # Fg_inv = np.linalg.inv(Fg)
 
+    # Fe = F @ Fp @ Fg_inv 
+    # Ce = Fe.T @ Fe
     thetae = theta*thetap/thetag
 
     # Elastic stretches along current fiber directions
+    # lam_e_a = np.sqrt(a0 @ Ce @ a0)
+    # lam_e_s = np.sqrt(s0 @ Ce @ s0)
 
     # ------------------------------------------------------------------
     # 2. Principal elastic stretches (sorted!)
     # ------------------------------------------------------------------
+    # eigval, eigvec = np.linalg.eig(Ce)
+    # eigval = np.real(eigval)
+    # eigvec = np.real(eigvec)
 
+    # idx = np.argsort(eigval)[::-1]   # descending
+    # eigval = eigval[idx]
+    # eigvec = eigvec[:, idx]
 
+    # lam1 = eigval[0]     # largest elastic stretch
+    # lam0 = eigval[1]     # smallest elastic stretch
+    # v1  = eigvec[:, 0]   # principal elastic direction
 
     # ------------------------------------------------------------------
     # 3. Elastic & growth stretches in GLOBAL G1/G2 (diagnostics)
     # ------------------------------------------------------------------
+    # e1 = np.array([1.0, 0.0])  # G1
+    # e2 = np.array([0.0, 1.0])  # G2
 
+    # lam_e_G1 = np.sqrt(e1 @ Ce @ e1)
+    # lam_e_G2 = np.sqrt(e2 @ Ce @ e2)
 
     # ------------------------------------------------------------------
     # 4. Mechanobiology → collagen production signals
     # ------------------------------------------------------------------
     H_theta = mech_to_signal1(thetae, params["c"], params["d"])
+    # H_thetas = mech_to_signal2(lam_e_s, params["g"], params["h"])
 
     # Copy solver states (IMPORTANT)
     y_current = solver.y.copy()
+    # y_currents = solvers.y.copy()
 
     y_current[mechanical] = H_theta
+    # y_currents[mechanical] = H_thetas
 
     dydt = deriv_after_mech_change(
         y_current, solver.t, H_theta, tau, ymax, w, n, EC50
     )
+    # dydt_s = deriv_after_mech_change(
         # y_currents, solvers.t, H_thetas, tau, ymax, w, n, EC50
     # )
 
     CI_dot = dydt[CI]
+    # CI_dots = dydt_s[CI]
 
     phidot_plus = CI_to_phi_a(CI_dot, params["a"], params["b"])
+    # phidot_s = CI_to_phi_s(CI_dots, params["e"], params["f"])
 
     # Advance signaling ODEs
     solver.set_initial_value(y_current, solver.t)
+    # solvers.set_initial_value(y_currents, solvers.t)
     solver.integrate(solver.t + dt)
+    # solvers.integrate(solvers.t + dt)
 
     # ------------------------------------------------------------------
     # 5. Growth update (gain retained as in your model)
     # ------------------------------------------------------------------
     GAIN = 1.0
+    # lamag_new = lamag + GAIN * dt * phidot_plus / params["tau_a"] * (lam_e_a - 1.0)
+    # lamsg_new = lamsg + GAIN * dt * phidot_plus / params["tau_s"] * (lam_e_s - 1.0)
     tau_g = max(params["tau_g"], 1e-3)
+    # k =1.0
+    # tau = phidot_plus / k
     thetag_new = thetag + GAIN * dt * phidot_plus / tau_g * (thetae - 1.0) 
+    # thetag_new = np.linalg.det(lamag_new * np.outer(a0, a0) + lamsg_new * np.outer(s0, s0))
 
     # ------------------------------------------------------------------
     # 6. Dispersion (kappa) update
     # ------------------------------------------------------------------
+    # kappa_target = 0.5 * (lam0 / lam1)**params["gamma_k"]
+    # tau_k = max(params["tau_k"], 1e-3)
 
+    # phidot_av = 0.5 * (phidot_a + phidot_s)
     phiplus_new = phiplus + dt * phidot_plus
 
+    # kappa_new = kappa + dt * (min(phiplus, 1.0) / tau_k) * (kappa_target - kappa)
 
     # ------------------------------------------------------------------
     # 7. Reorientation toward principal elastic direction
     # ------------------------------------------------------------------
+    # sinalpha = abs(a0[0] * v1[1] - a0[1] * v1[0])  # 2D cross product magnitude
 
+    # omega = (2 * np.pi / params["tau_w"]) * phidot_plus * sinalpha * lam1**2
 
+    # Rot = np.array([
+    #     [np.cos(omega * dt), -np.sin(omega * dt)],
+    #     [np.sin(omega * dt),  np.cos(omega * dt)]
+    # ])
 
+    # a0_new = Rot @ a0
+    # s0_new = Rot @ s0
 
     # # Normalize (safety)
+    # a0_new /= np.linalg.norm(a0_new)
+    # s0_new /= np.linalg.norm(s0_new)
 
     # ------------------------------------------------------------------
     # 8. Growth stretches in G1/G2 (POST-update, correct!)
     # ------------------------------------------------------------------
+    # Fg_new = lamag_new * np.outer(a0_new, a0_new) + \
+            #  lamsg_new * np.outer(s0_new, s0_new)
     
+    # Fg_new = thetag_new * np.eye(2)
 
+    # lam_g_G1 = np.sqrt(e1 @ (Fg_new.T @ Fg_new) @ e1)
+    # lam_g_G2 = np.sqrt(e2 @ (Fg_new.T @ Fg_new) @ e2)
 
     # ------------------------------------------------------------------
     return (
         thetag_new,
+        # lam_g_G1, lam_g_G2,
+        # lam_e_G1, lam_e_G2,
+        # kappa_new,
+        # a0_new, s0_new,
         phiplus_new,
         thetae,
+        # eigval, eigvec,
         phidot_plus
     )
 
@@ -408,6 +473,7 @@ def run_simulation_constant_F(
     theta, thetap,
     T_end,
     dt=0.1,
+    # lam_p1=1.0, lam_p2=1.0,
     prestretch_side="right",   # "right" matches F*Fp = FeFg
 ):
     """
@@ -426,15 +492,29 @@ def run_simulation_constant_F(
     )
     solver.set_initial_value(y0_local, 0).set_f_params(tau, ymax, w_vec, n, EC50)
 
+    # solvers = ode(NetfluxODE_5.ODEfunc).set_integrator(
     #     "vode", method="adams", order=10, rtol=0, atol=1e-6, with_jacobian=False
     # )
+    # solvers.set_initial_value(y0_local, 0).set_f_params(tau, ymax, w_vec, n, EC50)
 
     # initial conditions
+    # lamag = 1.0
+    # lamsg = 1.0
     thetag = 1.0
     phiplus = 0.1
+    # a0 = np.array([1.0, 0.0])
+    # s0 = np.array([0.0, 1.0])
+    # kappa = 0.5
 
     # storage
+    # lamag_arr = np.zeros(n_steps)
+    # lamsg_arr = np.zeros(n_steps)
     thetag_arr = np.zeros(n_steps)
+    # kappa_arr = np.zeros(n_steps)
+    # a0_arr = np.zeros((n_steps, 2))
+    # s0_arr = np.zeros((n_steps, 2))
+    # lam_g_G1_arr = np.zeros(n_steps)
+    # lam_g_G2_arr = np.zeros(n_steps)
     phiplus_arr = np.zeros(n_steps)
 
     t_arr = np.arange(n_steps) * dt
@@ -455,7 +535,9 @@ def run_simulation_constant_F(
 
     # effective total deformation used by decomposition inside update_Fg
     # if prestretch_side.lower() == "right":
+    #     F_eff = F_meas @ Fp     # matches F*Fp = FeFg
     # elif prestretch_side.lower() == "left":
+    #     F_eff = Fp @ F_meas
     # else:
     #     raise ValueError("prestretch_side must be 'right' or 'left'")
 
@@ -464,6 +546,7 @@ def run_simulation_constant_F(
         # lamag, lamsg, lamgG1, lamgG2, laeG1, laeG2, kappa, a0, s0, phiplus, \
         # thetae, thetag, eigval, eigvec, phidotplus = update_Fg(
         #     F_eff, lamag, lamsg, a0, s0, kappa, phiplus, dt,
+        #      solver=solver, params=params
         # )
         thetag, phiplus, thetae_new, phidotplus_new = update_Fg(theta, thetag, thetap, phiplus, dt, solver=solver, params=params)
         
@@ -500,6 +583,7 @@ idx_72  = np.where(data["time_g1"] == 72)[0][:10]
 idx_168 = np.where(data["time_g1"] == 168)[0][:10]
 
 selected_idx = np.concatenate([idx_24, idx_72, idx_168])
+# selected_idx_prueba=np.array([0,1])
 
 def loss_function(theta_vec, data, dt=0.1):
     # unpack parameters
@@ -512,6 +596,8 @@ def loss_function(theta_vec, data, dt=0.1):
     for i in selected_idx:  #len(t_iso)
 
         # mean input stretch at this time
+        # lam1 = lamG1_mean[t_in_g1 == t_exp][0]
+        # lam2 = lamG2_mean[t_in_g2 == t_exp][0]
         theta_exp=data["G1_in_all"][i]
         thetap_exp=data["G1p_all"][i]
         thetag_exp=data["G1g_all"][i]
@@ -528,6 +614,7 @@ def loss_function(theta_vec, data, dt=0.1):
         )
 
         thetag_model = results[1][-1]
+        # lam_g_G2_model = results[4][-1]
 
         loss += (thetag_model - thetag_exp)**2
 
